@@ -36,3 +36,4 @@ const mergeArrays = (arr1, arr2) => {
 
 console.log(mergeArrays(firstNumSortedArr, secondNumSortedArr))
 console.log(mergeArrays(firstStringsSortedArr, secondStringsSortedArr))
+// console.log(mergeArrays(firstStringsSortedArr, secondStringsSortedArr))
