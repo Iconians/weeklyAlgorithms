@@ -15,6 +15,7 @@ const symbols = [
 ];
 
 const convertNumber = (num) => {
+  // testing
   let convertedNum = ""
 
   for (const {value, symbol} of symbols) {
