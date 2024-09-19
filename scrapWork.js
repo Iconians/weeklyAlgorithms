@@ -1,0 +1,206 @@
+// start
+[
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 2, 0, 1],
+    index: 0,
+    goalDifference: -1,
+  },
+  {
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [2, 0, 1, 2, 2, 0],
+    index: 1,
+    goalDifference: 3,
+  },
+  {
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [1, 1, 0, 1, 2, 2],
+    index: 2,
+    goalDifference: 3,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 0, 2, 1],
+    index: 3,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [2, 0, 0, 0, 0, 2],
+    index: 4,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 4,
+    goalsAgainst: 7,
+    headToHead: [1, 2, 0, 1, 0, 0],
+    index: 5,
+    goalDifference: -3,
+  },
+][
+  // after initial sort
+  // should be teams 1, 2, 0, 3, 4, 5
+  ({
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [2, 0, 1, 2, 2, 0],
+    index: 1,
+    goalDifference: 3,
+  },
+  {
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [1, 1, 0, 1, 2, 2],
+    index: 2,
+    goalDifference: 3,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 2, 0, 1],
+    index: 0,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 0, 2, 1],
+    index: 3,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [2, 0, 0, 0, 0, 2],
+    index: 4,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 4,
+    goalsAgainst: 7,
+    headToHead: [1, 2, 0, 1, 0, 0],
+    index: 5,
+    goalDifference: -3,
+  })
+][
+  // after head to head
+  // should be teams 1, 2, 3, 4, 0, 5
+  ({
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [2, 0, 1, 2, 2, 0],
+    index: 1,
+    goalDifference: 3,
+  },
+  {
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [1, 1, 0, 1, 2, 2],
+    index: 2,
+    goalDifference: 3,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 0, 2, 1],
+    index: 3,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [2, 0, 0, 0, 0, 2],
+    index: 4,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 2, 0, 1],
+    index: 0,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 4,
+    goalsAgainst: 7,
+    headToHead: [1, 2, 0, 1, 0, 0],
+    index: 5,
+    goalDifference: -3,
+  })
+];
+
+// what the final sorts is instead
+
+[
+  {
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [2, 0, 1, 2, 2, 0],
+    index: 1,
+    goalDifference: 3,
+  },
+  {
+    points: 7,
+    goalsFor: 7,
+    goalsAgainst: 4,
+    headToHead: [1, 1, 0, 1, 2, 2],
+    index: 2,
+    goalDifference: 3,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [2, 0, 0, 0, 0, 2],
+    index: 4,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 2, 0, 1],
+    index: 0,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 7,
+    goalsAgainst: 8,
+    headToHead: [0, 0, 1, 0, 2, 1],
+    index: 3,
+    goalDifference: -1,
+  },
+  {
+    points: 4,
+    goalsFor: 4,
+    goalsAgainst: 7,
+    headToHead: [1, 2, 0, 1, 0, 0],
+    index: 5,
+    goalDifference: -3,
+  },
+];
