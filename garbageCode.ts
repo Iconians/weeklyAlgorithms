@@ -1,14 +1,14 @@
 const processGames = (number: number, games) => {
   let teams = Array(number)
-      .fill(null, 0, number)
-      .map((_, i) => ({
-        points: 0,
-        goalsFor: 0,
-        goalsAgainst: 0,
-        headToHead: Array(number).fill(0), // Track head-to-head points
-        index: i,
-        goalDifference: 0
-      }));
+    .fill(null, 0, number)
+    .map((_, i) => ({
+      points: 0,
+      goalsFor: 0,
+      goalsAgainst: 0,
+      headToHead: Array(number).fill(0), // Track head-to-head points
+      index: i,
+      goalDifference: 0,
+    }));
   // Process each game
   games.forEach(([teamA, teamB, goalsA, goalsB]) => {
     teams[teamA].goalsFor += goalsA;
@@ -43,34 +43,26 @@ const sortBYStats = (teams) => {
     if (b.goalDifference !== a.goalDifference)
       return b.goalDifference - a.goalDifference;
     if (b.goalsFor !== a.goalsFor) return b.goalsFor - a.goalsFor;
-    return a.index - b.index; // Sort by original index if all other criteria are the same
   });
 };
 
 const sortHeadToHead = (teams) => {
   for (let i = 0; i < teams.length - 1; i++) {
-    // if (
-    //   teams[i].points === teams[i + 1].points &&
-    //   teams[i].goalDifference === teams[i + 1].goalDifference &&
-    //   teams[i].goalsFor === teams[i + 1].goalsFor &&
-    //   teams[i].goalsAgainst === teams[i + 1].goalsAgainst 
-    // ) {
-      console.log(teams[i], teams[i + 1])
+    console.log(teams[i], teams[i + 1]);
     for (let j = i + 1; j < teams.length; j++) {
       if (
         teams[i].points === teams[j].points &&
         teams[i].goalDifference === teams[j].goalDifference &&
         teams[i].goalsFor === teams[j].goalsFor
       ) {
-        // if (teams[i].headToHead[teams[i + 1].index] < teams[i + 1].headToHead[teams[i].index]) {
-          if (teams[i].headToHead[teams[j].index] < teams[j].headToHead[teams[i].index]) {
-          // console.log(teams[i], teams[j]),
-          // [teams[i], teams[i + 1]] = [teams[i + 1], teams[i]];
+        if (
+          teams[i].headToHead[teams[j].index] <
+          teams[j].headToHead[teams[i].index]
+        ) {
           [teams[i], teams[j]] = [teams[j], teams[i]];
         }
       }
-      }
-    // }
+    }
   }
   // console.log(teams)
   return teams;
