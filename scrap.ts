@@ -1,118 +1,110 @@
-type gameType = number[];
-
-type teamType = {
-  points: number;
-  goalsFor: number;
-  goalsAgainst: number;
-  goalDifference: number;
-  team: number;
-  headToHead: { [key: number]: number };
+type TeamStats = {
+  id: number;
+  score: number;
+  goals: number;
+  diff: number;
+  headToHead: Map<number, number>; // Store head-to-head points against each team
 };
 
-const processGames = (
-  number: number,
-  games: gameType[]
-): Map<number, teamType> => {
-  let map = new Map<number, teamType>();
-  for (let i = 0; i < number; i++) {
-    map.set(i, {
-      points: 0,
-      goalsFor: 0,
-      goalsAgainst: 0,
-      goalDifference: 0,
-      team: i,
-      headToHead: {},
-    });
-  }
-  games.forEach(([teamA, teamB, goalsA, goalsB]) => {
-    map.get(teamA).goalsFor += goalsA;
-    map.get(teamA).goalsAgainst += goalsB;
-    map.get(teamB).goalsFor += goalsB;
-    map.get(teamB).goalsAgainst += goalsA;
+export function computeRanks(number: number, games: number[][]): number[] {
+  // Step 1: Initialize team statistics
+  const teams: TeamStats[] = Array.from({ length: number }, (_, id) => ({
+    id,
+    score: 0,
+    goals: 0,
+    diff: 0,
+    headToHead: new Map<number, number>(), // Initialize head-to-head results
+  }));
 
-    if (goalsA > goalsB) {
-      map.get(teamA).points += 2; // Team A wins
-    } else if (goalsA < goalsB) {
-      map.get(teamB).points += 2; // Team B wins
+  // Step 2: Process each game
+  games.forEach(([a, b, x, y]) => {
+    // Update goals and goal difference for each team
+    teams[a].goals += x;
+    teams[b].goals += y;
+    teams[a].diff += x - y;
+    teams[b].diff += y - x;
+
+    // Update head-to-head results
+    if (!teams[a].headToHead.has(b)) {
+      teams[a].headToHead.set(b, 0);
+    }
+    if (!teams[b].headToHead.has(a)) {
+      teams[b].headToHead.set(a, 0);
+    }
+
+    if (x === y) {
+      teams[a].score += 1; // Draw
+      teams[b].score += 1; // Draw
+      teams[a].headToHead.set(b, teams[a].headToHead.get(b)! + 1); // Each gets 1 point in head-to-head
+      teams[b].headToHead.set(a, teams[b].headToHead.get(a)! + 1); // Each gets 1 point in head-to-head
     } else {
-      map.get(teamA).points += 1; // Draw
-      map.get(teamB).points += 1; // Draw
+      const winner = x > y ? a : b;
+      const loser = x > y ? b : a;
+      teams[winner].score += 2; // Winner gets 2 points
+      teams[winner].headToHead.set(
+        loser,
+        teams[winner].headToHead.get(loser)! + 2
+      ); // Winner gets 2 points in head-to-head
     }
-
-    map.get(teamA).goalDifference =
-      map.get(teamA).goalsFor - map.get(teamA).goalsAgainst;
-    map.get(teamB).goalDifference =
-      map.get(teamB).goalsFor - map.get(teamB).goalsAgainst;
-
-    if (!map.get(teamA).headToHead[teamB]) {
-      map.get(teamA).headToHead[teamB] = 0;
-    }
-    if (!map.get(teamB).headToHead[teamA]) {
-      map.get(teamB).headToHead[teamA] = 0;
-    }
-    map.get(teamA).headToHead[teamB] += goalsA;
-    map.get(teamB).headToHead[teamA] += goalsB;
   });
 
-  return map;
-};
+  // Step 3: Sort teams based on score, goal difference, and goals scored
+  const cmp = (teamA: TeamStats, teamB: TeamStats) => {
+    return (
+      teamB.score - teamA.score || // Sort by score
+      teamB.diff - teamA.diff || // Sort by goal difference
+      teamB.goals - teamA.goals // Sort by goals scored
+    );
+  };
 
-const sortAllTeams = (teams: Map<number, teamType>): Map<number, teamType> => {
-  // if (teams.size <= 1) {
-  //   return teams;
-  // }
+  // Sort teams using the comparator
+  teams.sort(cmp);
 
-  const sortedTeams = new Map<number, teamType>(
-    [...teams.entries()].sort((a, b) => {
-      if (a[1].points !== b[1].points) {
-        return b[1].points - a[1].points;
-      }
-      if (a[1].goalDifference !== b[1].goalDifference) {
-        return b[1].goalDifference - a[1].goalDifference;
-      }
-      if (a[1].goalsFor !== b[1].goalsFor) {
-        return b[1].goalsFor - a[1].goalsFor;
-      }
-      if (a[1].headToHead[b[0]] !== b[1].headToHead[a[0]]) {
-        return b[1].headToHead[a[0]] - a[1].headToHead[b[0]];
-      }
-      return 0;
-    })
-  );
-
-  // need to sort by team head-to-head and make sure its sorted correctly for 1st example [5, 1, 1, 3, 4, 6] second example [4, 1, 2, 3]
-
-  return sortedTeams;
-};
-
-export function computeRanks(number: number, games: gameType[]) {
-  // Process games to update teams' statistics
-  const processAllGames = processGames(number, games);
-  // console.log("processAllGames", processAllGames);
-
-  // Sort teams based on points, goal difference, goals for, and head-to-head
-  const sortedTeams = sortAllTeams(processAllGames);
-  console.log("sortedTeams", sortedTeams);
-
-  // Assign ranks based on the sorted order
-  let ranks = Array(number).fill(0);
+  // Step 4: Handle ties with head-to-head results
+  const ranks = Array(number).fill(0);
   let currentRank = 1;
-  const teamsArray = Array.from(sortedTeams.values());
 
-  for (let i = 0; i < teamsArray.length; i++) {
-    if (
-      i > 0 &&
-      (teamsArray[i].points !== teamsArray[i - 1].points ||
-        teamsArray[i].goalDifference !== teamsArray[i - 1].goalDifference ||
-        teamsArray[i].goalsFor !== teamsArray[i - 1].goalsFor ||
-        teamsArray[i].headToHead[teamsArray[i - 1].team] !==
-          teamsArray[i - 1].headToHead[teamsArray[i].team])
-    ) {
-      currentRank = i + 1;
+  for (let i = 0; i < teams.length; i++) {
+    const currentTeam = teams[i];
+
+    // Check for ties
+    if (i > 0 && cmp(currentTeam, teams[i - 1]) === 0) {
+      // If tied, gather all tied teams
+      const tiedTeams: number[] = [currentTeam.id];
+      let j = i + 1;
+
+      // Gather all tied teams
+      while (j < teams.length && cmp(currentTeam, teams[j]) === 0) {
+        tiedTeams.push(teams[j].id);
+        j++;
+      }
+
+      // Step 5: Evaluate head-to-head results for tied teams
+      const headToHeadResults = tiedTeams.map((teamId) => {
+        const team = teams[teamId];
+        const totalPoints = Array.from(team.headToHead.values()).reduce(
+          (total, points) => total + points,
+          0
+        );
+        return { id: teamId, score: totalPoints };
+      });
+
+      // Sort head-to-head results
+      headToHeadResults.sort((a, b) => b.score - a.score);
+
+      // Assign ranks based on head-to-head results
+      headToHeadResults.forEach((team, rankIndex) => {
+        ranks[team.id] = currentRank; // Assign same rank for tied teams
+      });
+
+      // Move the index to the next group of teams
+      i = j - 1; // Update i to skip over the tied teams
+      currentRank++; // Increase rank for the next team
+    } else {
+      ranks[currentTeam.id] = currentRank; // Assign rank to non-tied team
+      currentRank++; // Move to the next rank
     }
-    ranks[teamsArray[i].team] = currentRank;
   }
 
-  console.log("ranks", ranks);
   return ranks;
 }
