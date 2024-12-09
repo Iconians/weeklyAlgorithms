@@ -8,3 +8,4 @@ const problem = (x) => {
 console.log(problem(1));
 console.log(problem(5));
 console.log(problem("hello"));
+console.log(problem("trouble"));
